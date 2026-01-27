@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rxforms-blue: #1a56db;
+  --color-rxforms-gold: #d4a843;
+  --color-security-band: #8B7355;
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .bg-diagonal-pattern-rich {
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 115, 85, 0.05) 10px, rgba(139, 115, 85, 0.05) 11px);
+  }
+  .bg-diagonal-pattern-light {
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(139, 115, 85, 0.03) 20px, rgba(139, 115, 85, 0.03) 21px);
+  }
+}
