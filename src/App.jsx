@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormState } from './hooks/useFormState';
-import { ProgressBar } from './components/Builder/ProgressBar';
+import { Header } from './components/ui/Header';
+import { FooterNav } from './components/ui/FooterNav';
+import { StepLayout } from './components/ui/StepLayout';
 import { PracticeForm } from './components/Builder/PracticeForm';
 import { PrescriberForm } from './components/Builder/PrescriberForm';
 import { ProofApproval } from './components/Review/ProofApproval';
 import { OrderOptions } from './components/Order/OrderOptions';
 import { PreviewPanel } from './components/Preview/PreviewPanel';
+import { validatePractice, validatePrescriber } from './utils/validation';
 
 function App() {
   const {
@@ -29,7 +32,43 @@ function App() {
     setProofApproved,
   } = useFormState();
 
-  const renderStep = () => {
+  const [completedSteps, setCompletedSteps] = useState(['practice']);
+
+  useEffect(() => {
+    const newCompleted = ['practice'];
+    if (validatePractice(practices[0]).valid) {
+      newCompleted.push('prescribers');
+    }
+    const allPrescribersValid = prescribers.every(p => validatePrescriber(p).valid);
+    if (newCompleted.includes('prescribers') && allPrescribersValid) {
+      newCompleted.push('review');
+    }
+    if (proofApproved) {
+      newCompleted.push('order');
+    }
+    setCompletedSteps(newCompleted);
+  }, [practices, prescribers, proofApproved]);
+
+  const handleContinue = () => {
+    if (currentStep === 'practice') setCurrentStep('prescribers');
+    else if (currentStep === 'prescribers') setCurrentStep('review');
+    else if (currentStep === 'review') setCurrentStep('order');
+  };
+
+  const handleBack = () => {
+    if (currentStep === 'prescribers') setCurrentStep('practice');
+    else if (currentStep === 'review') setCurrentStep('prescribers');
+    else if (currentStep === 'order') setCurrentStep('review');
+  };
+
+  const isContinueDisabled = () => {
+    if (currentStep === 'practice') return !validatePractice(practices[0]).valid;
+    if (currentStep === 'prescribers') return !prescribers.every(p => validatePrescriber(p).valid);
+    if (currentStep === 'review') return !proofApproved;
+    return false;
+  };
+
+  const renderContent = () => {
     switch (currentStep) {
       case 'practice':
         return (
@@ -38,7 +77,6 @@ function App() {
             updatePractice={updatePractice}
             addPractice={addPractice}
             removePractice={removePractice}
-            onContinue={() => setCurrentStep('prescribers')}
           />
         );
       case 'prescribers':
@@ -50,8 +88,6 @@ function App() {
             removePrescriber={removePrescriber}
             padOptions={padOptions}
             setPadOptions={setPadOptions}
-            onContinue={() => setCurrentStep('review')}
-            onBack={() => setCurrentStep('practice')}
           />
         );
       case 'review':
@@ -63,7 +99,6 @@ function App() {
             securityLevel={securityLevel}
             proofApproved={proofApproved}
             setProofApproved={setProofApproved}
-            onApprove={() => setCurrentStep('order')}
             onEdit={() => setCurrentStep('prescribers')}
           />
         );
@@ -85,53 +120,37 @@ function App() {
     }
   };
 
-  const showPreview = currentStep === 'practice' || currentStep === 'prescribers';
+  const renderPreview = () => (
+    <PreviewPanel
+      practices={practices}
+      prescribers={prescribers}
+      padOptions={padOptions}
+      securityLevel={securityLevel}
+      setSecurityLevel={setSecurityLevel}
+      isReviewStep={currentStep === 'review'}
+    />
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans text-gray-900">
-      <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-rxforms-blue rounded flex items-center justify-center text-white font-bold">Rx</div>
-            <h1 className="text-xl font-bold tracking-tight">RxForms <span className="text-gray-400 font-normal">POC</span></h1>
-          </div>
-          <div className="hidden md:block text-sm font-medium text-gray-500">
-            Arizona Prescription Pads
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-white flex flex-col">
+      <Header 
+        currentStep={currentStep} 
+        completedSteps={completedSteps} 
+        onStepClick={setCurrentStep} 
+      />
 
-      <ProgressBar currentStep={currentStep} onStepClick={setCurrentStep} />
-
-      <main className="flex-1 max-w-7xl mx-auto w-full p-6">
-        <div className="flex flex-col lg:flex-row gap-12">
-          {/* Left: Form Area */}
-          <div className={`flex-1 ${!showPreview ? 'max-w-4xl mx-auto w-full' : 'max-w-2xl'}`}>
-            {renderStep()}
-          </div>
-
-          {/* Right: Preview Panel (sticky) */}
-          {showPreview && (
-            <div className="w-full lg:w-[450px] space-y-6">
-              <div className="sticky top-28">
-                <PreviewPanel
-                  practices={practices}
-                  prescribers={prescribers}
-                  padOptions={padOptions}
-                  securityLevel={securityLevel}
-                  setSecurityLevel={setSecurityLevel}
-                />
-              </div>
-            </div>
-          )}
-        </div>
+      <main className="flex-1">
+        <StepLayout preview={renderPreview()}>
+          {renderContent()}
+        </StepLayout>
       </main>
 
-      <footer className="bg-white border-t border-gray-200 py-8 px-6 mt-12">
-        <div className="max-w-7xl mx-auto text-center text-gray-400 text-sm">
-          &copy; 2026 RxForms Proof of Concept. All rights reserved.
-        </div>
-      </footer>
+      <FooterNav 
+        onBack={currentStep !== 'practice' ? handleBack : null}
+        onContinue={handleContinue}
+        continueDisabled={isContinueDisabled()}
+        continueLabel={currentStep === 'order' ? 'Complete Order' : 'Continue'}
+      />
     </div>
   );
 }
