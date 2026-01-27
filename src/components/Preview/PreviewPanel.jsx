@@ -1,6 +1,7 @@
 import React from 'react';
 import { PrescriptionPadSVG } from './PrescriptionPadSVG';
 import { SecurityToggle } from './SecurityToggle';
+import { PricingTable } from './PricingTable';
 import { HelpExpander } from '../ui/HelpExpander';
 
 export function PreviewPanel({ practices, prescribers, padOptions, securityLevel, setSecurityLevel }) {
