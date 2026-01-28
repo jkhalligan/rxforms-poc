@@ -28,7 +28,7 @@ export function ReviewAndOrder({
   padOptions,
   securityLevel,
   onBack,
-  onAddToCart,
+  onProceedToCheckout,
 }) {
   const [quantity, setQuantity] = useState(8);
   const [paperType, setPaperType] = useState('carbonless-2'); 
@@ -47,9 +47,9 @@ export function ReviewAndOrder({
 
   const quantities = [8, 16, 24, 40, 80];
 
-  const handleAddToCart = () => {
+  const handleProceedToCheckout = () => {
     if (!proofApproved) return;
-    onAddToCart({
+    onProceedToCheckout({
       practices,
       prescribers,
       padOptions,
@@ -57,6 +57,7 @@ export function ReviewAndOrder({
       quantity,
       paperType,
       productionTime,
+      basePrice,
       totalPrice,
     });
   };
@@ -304,14 +305,14 @@ export function ReviewAndOrder({
             <span className="total-amount">${totalPrice}</span>
           </div>
 
-          {/* Add to Cart Button */}
+          {/* Proceed to Checkout Button */}
           <button
             className="add-to-cart-btn"
-            onClick={handleAddToCart}
+            onClick={handleProceedToCheckout}
             disabled={!proofApproved}
           >
             <LockIcon className="btn-icon" />
-            <span>Add to Cart · ${totalPrice}</span>
+            <span>Proceed to Checkout</span>
           </button>
 
           {!proofApproved && (

@@ -6,6 +6,7 @@ import { StepLayout } from './components/ui/StepLayout';
 import { PracticeForm } from './components/Builder/PracticeForm';
 import { PrescriberForm } from './components/Builder/PrescriberForm';
 import { ReviewAndOrder } from './components/ReviewAndOrder/ReviewAndOrder';
+import { CheckoutPage } from './components/Checkout/CheckoutPage';
 import { PreviewPanel } from './components/Preview/PreviewPanel';
 import { validatePractice, validatePrescriber } from './utils/validation';
 
@@ -57,9 +58,18 @@ function App() {
     return false;
   };
 
-  const handleAddToCart = (orderData) => {
-    console.log('Adding to cart:', orderData);
-    alert(`Added to cart! Total: $${orderData.totalPrice}`);
+  const [checkoutData, setCheckoutData] = useState(null);
+
+  const handleProceedToCheckout = (orderData) => {
+    console.log('Proceeding to checkout:', orderData);
+    setCheckoutData(orderData);
+    setCurrentStep('checkout');
+  };
+
+  const handleStartNewOrder = () => {
+    // Reset to practice step
+    setCurrentStep('practice');
+    setCheckoutData(null);
   };
 
   const renderContent = () => {
@@ -92,9 +102,23 @@ function App() {
             padOptions={padOptions}
             securityLevel={securityLevel}
             onBack={() => setCurrentStep('prescribers')}
-            onAddToCart={handleAddToCart}
+            onProceedToCheckout={handleProceedToCheckout}
           />
         );
+      case 'checkout':
+        return checkoutData ? (
+          <CheckoutPage
+            practices={practices}
+            prescribers={prescribers}
+            padOptions={padOptions}
+            securityLevel={securityLevel}
+            quantity={checkoutData.quantity}
+            paperType={checkoutData.paperType}
+            productionTime={checkoutData.productionTime}
+            basePrice={checkoutData.basePrice}
+            onStartNewOrder={handleStartNewOrder}
+          />
+        ) : null;
       default:
         return null;
     }
@@ -113,14 +137,16 @@ function App() {
 
   return (
     <div className="min-h-screen bg-transparent flex flex-col">
-      <Header
-        currentStep={currentStep}
-        completedSteps={completedSteps}
-        onStepClick={setCurrentStep}
-      />
+      {currentStep !== 'checkout' && (
+        <Header
+          currentStep={currentStep}
+          completedSteps={completedSteps}
+          onStepClick={setCurrentStep}
+        />
+      )}
 
       <main className="flex-1">
-        {currentStep === 'review' ? (
+        {currentStep === 'review' || currentStep === 'checkout' ? (
           renderContent()
         ) : (
           <StepLayout preview={renderPreview()}>
@@ -129,14 +155,16 @@ function App() {
         )}
       </main>
 
-      <FooterNav 
-        currentStep={currentStep}
-        onBack={currentStep !== 'practice' ? handleBack : null}
-        onContinue={handleContinue}
-        continueDisabled={isContinueDisabled()}
-        continueLabel="CONTINUE"
-        securityLevel={securityLevel}
-      />
+      {currentStep !== 'review' && currentStep !== 'checkout' && (
+        <FooterNav
+          currentStep={currentStep}
+          onBack={currentStep !== 'practice' ? handleBack : null}
+          onContinue={handleContinue}
+          continueDisabled={isContinueDisabled()}
+          continueLabel="CONTINUE"
+          securityLevel={securityLevel}
+        />
+      )}
     </div>
   );
 }
