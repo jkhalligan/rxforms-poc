@@ -15,16 +15,16 @@ export function Header({ currentStep, completedSteps, onStepClick }) {
   ];
 
   return (
-    <header className="bg-white border-b border-gray-200 py-3 px-6 sticky top-0 z-100">
-      <div className="max-w-[1200px] mx-auto flex items-center justify-between">
+    <header className="bg-white border-b border-border py-3 px-6 sticky top-0 z-[100] shadow-sm">
+      <div className="max-w-[1100px] mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2 font-semibold text-gray-900">
-          <span className="bg-primary text-white px-2 py-1 rounded-md text-sm">Rx</span>
-          <span>RxForms <span className="text-gray-400 font-normal">POC</span></span>
+        <div className="flex items-center gap-2 font-bold text-gray-900">
+          <span className="bg-primary text-white px-2 py-1 rounded text-xs">Rx</span>
+          <span className="tracking-tight">RxForms <span className="text-gray-300 font-normal">POC</span></span>
         </div>
 
         {/* Progress breadcrumb */}
-        <nav className="flex items-center gap-2" aria-label="Form progress">
+        <nav className="flex items-center gap-1" aria-label="Form progress">
           {steps.map((step, index) => {
             const isCompleted = completedSteps.includes(step.id);
             const isCurrent = step.id === currentStep;
@@ -32,15 +32,15 @@ export function Header({ currentStep, completedSteps, onStepClick }) {
 
             return (
               <React.Fragment key={step.id}>
-                {index > 0 && <span className="text-gray-300 text-sm">›</span>}
+                {index > 0 && <span className="text-gray-200 text-sm px-1">›</span>}
                 <button
                   onClick={() => isClickable && onStepClick(step.id)}
                   disabled={!isClickable && !isCurrent}
                   className={`
-                    px-3 py-1.5 rounded-md text-sm transition-all flex items-center gap-1.5
-                    ${isCurrent ? 'bg-primary-light text-primary font-semibold' : ''}
-                    ${isCompleted && !isCurrent ? 'text-gray-700 hover:bg-gray-100' : ''}
-                    ${!isClickable && !isCurrent ? 'text-gray-400 cursor-not-allowed' : ''}
+                    px-3 py-1.5 rounded text-[13px] transition-all flex items-center gap-1.5
+                    ${isCurrent ? 'bg-primary-light text-primary font-bold' : ''}
+                    ${isCompleted && !isCurrent ? 'text-gray-700 hover:bg-gray-50' : ''}
+                    ${!isClickable && !isCurrent ? 'text-gray-300 cursor-not-allowed' : ''}
                   `}
                   aria-current={isCurrent ? 'step' : undefined}
                 >
@@ -55,8 +55,8 @@ export function Header({ currentStep, completedSteps, onStepClick }) {
         </nav>
 
         {/* Product context */}
-        <div className="hidden md:block text-gray-500 text-sm">
-          Arizona Prescription Pads
+        <div className="hidden md:block text-gray-400 font-bold text-[11px] uppercase tracking-widest">
+          Arizona Rx Pads
         </div>
       </div>
     </header>

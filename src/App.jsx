@@ -149,7 +149,7 @@ function App() {
         onBack={currentStep !== 'practice' ? handleBack : null}
         onContinue={handleContinue}
         continueDisabled={isContinueDisabled()}
-        continueLabel={currentStep === 'order' ? 'Complete Order' : 'Continue'}
+        continueLabel={currentStep === 'order' ? 'SUBMIT ORDER' : 'CONTINUE'}
       />
     </div>
   );

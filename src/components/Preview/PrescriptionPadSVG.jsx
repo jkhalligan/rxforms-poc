@@ -1,6 +1,12 @@
 import React from 'react';
 import { arizonaConfig } from '../../config/arizona';
 
+const FileIcon = () => (
+  <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+  </svg>
+);
+
 export function PrescriptionPadSVG({ practices, prescribers, padOptions, securityLevel }) {
   const config = arizonaConfig;
   const showMicroprint = config.microprint.showOn.includes(securityLevel);
@@ -11,11 +17,12 @@ export function PrescriptionPadSVG({ practices, prescribers, padOptions, securit
   
   if (!hasPracticeData && !hasPrescriberData) {
     return (
-      <div className="flex items-center justify-center h-full text-gray-400 text-center p-8">
-        <div>
-          <p className="text-sm font-medium">Fill in the form to see your preview</p>
-          <p className="text-xs mt-1">Your prescription pad will appear here</p>
+      <div className="flex flex-col items-center justify-center h-full text-center p-8 bg-white/50 backdrop-blur-sm rounded-sm">
+        <div className="text-gray-300 mb-3 opacity-50">
+          <FileIcon />
         </div>
+        <p className="text-sm font-semibold text-gray-600">Your preview will appear here</p>
+        <p className="text-xs text-gray-400 mt-1">Start filling in the form to see your prescription pad</p>
       </div>
     );
   }
@@ -196,7 +203,8 @@ export function PrescriptionPadSVG({ practices, prescribers, padOptions, securit
       <text x="310" y="150" fontSize="9" fontFamily="Arial, sans-serif">Date</text>
       <line x1="335" y1="150" x2="385" y2="150" stroke="#000" strokeWidth="0.5" />
       
-      <text x="20" y="200" fontSize="36" fontFamily="serif" fontWeight="bold">℞</text>
+      {/* Styled Rx Text for PDF Compatibility */}
+      <text x="20" y="200" fontSize="32" fontFamily="Times New Roman, serif" fontWeight="bold" fontStyle="italic">Rx</text>
       
       <text x="365" y="165" fontSize="8" fontFamily="Arial, sans-serif" fontWeight="bold" textDecoration="underline">Refill</text>
       {['NR', '1', '2', '3', '4', '5', 'PRN'].map((label, i) => (

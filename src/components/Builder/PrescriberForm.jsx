@@ -31,6 +31,8 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
   const handlePrefill = (e) => {
     if (e.target.checked) {
       updatePrescriber(0, samplePrescriber);
+    } else {
+      updatePrescriber(0, { name: '', credentials: '', specialty: '', licenseNumber: '', npiNumber: '', deaNumber: '' });
     }
   };
 
@@ -58,17 +60,19 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900">Prescriber Details</h2>
-        <p className="text-gray-500 mt-1">Add up to 6 prescribers for this pad.</p>
-      </div>
-
-      <div className="bg-primary-light p-4 rounded-xl border border-blue-100">
-        <Checkbox 
-          label="Prefill with sample data" 
-          description="Use Sarah Chen, MD"
-          onChange={handlePrefill}
-        />
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900">Prescriber Details</h2>
+          <p className="text-gray-500 mt-1">Add up to 6 prescribers for this pad.</p>
+        </div>
+        <label className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest cursor-pointer hover:text-primary transition-colors pb-1">
+          <input 
+            type="checkbox" 
+            className="w-3.5 h-3.5 rounded border-gray-300 text-primary focus:ring-primary"
+            onChange={handlePrefill}
+          />
+          Prefill Demo
+        </label>
       </div>
 
       <div className="space-y-3">
@@ -80,13 +84,13 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
           return (
             <div 
               key={index} 
-              className={`border rounded-lg overflow-hidden transition-all ${
-                isExpanded ? 'border-primary ring-1 ring-primary' : 'border-gray-200'
+              className={`bg-white border rounded-lg overflow-hidden transition-all ${
+                isExpanded ? 'border-primary shadow-sm' : 'border-border'
               }`}
             >
               <button
                 className={`w-full flex items-center gap-3 p-4 text-left transition-colors ${
-                  isExpanded ? 'bg-primary-light' : 'bg-gray-50 hover:bg-gray-100'
+                  isExpanded ? 'bg-primary-light/30' : 'bg-bg-subtle hover:bg-gray-100'
                 }`}
                 onClick={() => setExpandedIndex(isExpanded ? -1 : index)}
               >
@@ -95,14 +99,14 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
                   {status === 'error' && <AlertCircleIcon className="w-5 h-5 text-error" />}
                   {status === 'incomplete' && <CircleIcon className="w-5 h-5 text-gray-300" />}
                 </div>
-                <span className={`flex-1 font-medium ${isExpanded ? 'text-primary' : 'text-gray-700'}`}>
+                <span className={`flex-1 font-bold ${isExpanded ? 'text-primary' : 'text-gray-900'}`}>
                   {getAccordionLabel(prescriber, index)}
                 </span>
-                <span className={`transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}>▾</span>
+                <span className={`transform transition-transform text-gray-400 ${isExpanded ? 'rotate-180' : ''}`}>▾</span>
               </button>
               
               {isExpanded && (
-                <div className="p-4 bg-white border-t border-gray-100 space-y-4">
+                <div className="p-4 bg-white border-t border-border-light space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {prescriberFields.map((field) => (
                       field.type === 'checkbox' ? (
@@ -130,7 +134,7 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
                   {prescribers.length > 1 && (
                     <button 
                       onClick={() => removePrescriber(index)}
-                      className="text-error text-sm font-medium hover:underline pt-2"
+                      className="text-error text-[10px] font-bold uppercase tracking-widest hover:underline pt-2"
                     >
                       Remove this prescriber
                     </button>
@@ -144,14 +148,14 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
         <button
           onClick={addPrescriber}
           disabled={!canAddPrescriber()}
-          className={`w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg font-medium transition-all ${
+          className={`w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg font-bold transition-all text-sm ${
             canAddPrescriber() 
-              ? 'border-gray-300 text-primary hover:border-primary hover:bg-primary-light' 
+              ? 'border-gray-200 text-primary hover:border-primary hover:bg-primary-light' 
               : 'border-gray-200 text-gray-400 cursor-not-allowed'
           }`}
         >
-          + Add another prescriber
-          <span className="text-xs font-normal opacity-70">({prescribers.length} of {maxPrescribers})</span>
+          + ADD ANOTHER PRESCRIBER
+          <span className="text-[10px] font-normal opacity-70">({prescribers.length} of {maxPrescribers})</span>
         </button>
         
         {!canAddPrescriber() && prescribers.length < maxPrescribers && (

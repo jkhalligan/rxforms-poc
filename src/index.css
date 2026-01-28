@@ -1,13 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #2563eb;
-  --color-primary-hover: #1d4ed8;
-  --color-primary-light: #eff6ff;
+  /* RxForms Brand Palette */
+  --color-primary: #006FFF;
+  --color-primary-hover: #0059CC;
+  --color-primary-light: #E6F0FF;
   
-  --color-rxforms-blue: #2563eb;
-  --color-rxforms-gold: #d4a843;
-  --color-security-band: #8B7355;
+  --color-bg-page: #F2F2F2;
+  --color-bg-card: #FFFFFF;
+  --color-bg-subtle: #FAFAFA;
+  
+  --color-text-primary: #1A1A2E;
+  --color-text-secondary: #4A5568;
+  --color-text-muted: #9CA3AF;
+  
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+  
+  --color-dark: #1A1A2E;
+  --color-dark-secondary: #2D2D44;
+  
+  --color-rxforms-blue: #006FFF;
+  --color-rxforms-gold: #D4A843;
+  --color-accent: #D4A843;
+  --color-accent-hover: #C49A3A;
 
   --color-success: #059669;
   --color-success-light: #d1fae5;
@@ -22,24 +38,18 @@
   line-height: 1.5;
   font-weight: 400;
   color-scheme: light;
-  background-color: #ffffff;
-  color: #111827;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
-  --text-base: 1rem;
-  --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
 }
 
 body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-sans);
-  font-size: var(--text-base);
-  color: #111827;
+  background-color: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 h1, h2, h3 {
@@ -56,7 +66,6 @@ h1, h2, h3 {
   }
 }
 
-/* Base styles for buttons and inputs to match spec */
 .btn {
   @apply px-4 py-2 rounded-lg font-semibold transition-all flex items-center justify-center gap-2;
 }
@@ -71,13 +80,13 @@ h1, h2, h3 {
 
 .step-container {
   display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: 2rem;
-  max-width: 1200px;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 1.5rem;
   min-height: calc(100vh - 120px);
-  padding-bottom: 5rem;
+  padding-bottom: 6rem;
 }
 
 .step-preview {
@@ -99,4 +108,37 @@ h1, h2, h3 {
     order: -1;
     max-height: 50vh;
   }
+}
+
+.content-card {
+  @apply bg-white border border-border rounded-lg overflow-hidden;
+}
+
+.content-card-header {
+  @apply px-5 py-4 border-b border-border-light bg-bg-subtle flex justify-between items-center;
+}
+
+.content-card-body {
+  @apply p-5;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  @apply fixed inset-0 bg-black/60 flex items-center justify-center z-[1000] p-8;
+}
+
+.modal-content {
+  @apply bg-white rounded-xl max-w-[900px] w-full max-h-[90vh] overflow-auto shadow-2xl;
+}
+
+.modal-header {
+  @apply flex justify-between items-center px-6 py-4 border-b border-border;
+}
+
+.modal-preview {
+  @apply m-6 rounded-lg overflow-hidden aspect-[1.294] bg-cover bg-center;
+}
+
+.modal-footer {
+  @apply px-6 py-4 bg-bg-subtle border-t border-border;
 }
