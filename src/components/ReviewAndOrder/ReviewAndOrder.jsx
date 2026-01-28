@@ -16,8 +16,8 @@ const LockIcon = ({ className }) => (
   </svg>
 );
 
-const DownloadIcon = () => (
-  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const DownloadIcon = ({ className }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
   </svg>
 );
@@ -68,12 +68,12 @@ export function ReviewAndOrder({
   };
 
   return (
-    <div className="review-order-container">
+    <div className="review-order-layout">
       {/* Left Column - Proof */}
-      <div className="review-proof-column">
-        <div className="proof-section">
-          <h2 className="section-title">Review Your Proof</h2>
-          <p className="section-subtitle">
+      <div className="review-proof-section">
+        <div className="proof-card">
+          <h2 className="proof-title">Review Your Proof</h2>
+          <p className="proof-subtitle">
             Please verify all details are correct before adding to cart.
           </p>
 
@@ -90,7 +90,7 @@ export function ReviewAndOrder({
               padOptions={padOptions}
               securityLevel={securityLevel}
             />
-            <div className="proof-zoom-hint">
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/70 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
               <ZoomInIcon />
               <span>Click to enlarge</span>
             </div>
@@ -119,27 +119,27 @@ export function ReviewAndOrder({
       </div>
 
       {/* Right Column - Order Summary */}
-      <div className="order-summary-column">
+      <div className="order-summary-section">
         <div className="order-summary-card">
           <h3 className="order-summary-title">Order Summary</h3>
 
-          <div className="order-product-info">
-            <div className="product-badge">
+          <div className="mb-4">
+            <span className="security-badge">
               {securityLevel === 'maximum-security' && 'Maximum Security'}
               {securityLevel === 'minimum-security' && 'Minimum Security'}
               {securityLevel === 'no-security' && 'Standard'}
-            </div>
-            <p className="product-details">
+            </span>
+            <p className="product-meta">
               Arizona · {prescribers.filter(p => p.name).length} Prescriber
               {prescribers.filter(p => p.name).length !== 1 ? 's' : ''}
-              {padOptions.startingNumber !== '0001' && ` · Starting #${padOptions.startingNumber}`}
             </p>
           </div>
 
-          <div className="order-divider" />
+          <div className="divider" />
 
-          <div className="order-section">
-            <label className="order-section-label">Quantity (Pads)</label>
+          {/* Quantity Selection */}
+          <div className="order-field">
+            <label className="field-label">Quantity (Pads)</label>
             <div className="quantity-buttons">
               {quantities.map((qty) => (
                 <button
@@ -153,106 +153,96 @@ export function ReviewAndOrder({
             </div>
           </div>
 
-          <div className="order-divider" />
+          <div className="divider" />
 
-          <div className="order-section">
-            <div className="order-option-row">
-              <span className="order-option-label">Paper</span>
+          {/* Paper Type */}
+          <div className="order-field">
+            <div className="field-row">
+              <span className="field-label">Paper</span>
               {!editingPaper ? (
                 <div className="order-option-value">
                   <span>{paperType === 'carbonless-2' ? '2-Part Carbonless' : 'Single Ply'}</span>
-                  <button 
-                    className="edit-link"
-                    onClick={() => setEditingPaper(true)}
-                  >
+                  <button className="edit-link" onClick={() => setEditingPaper(true)}>
                     Edit
                   </button>
                 </div>
               ) : (
-                <div className="order-option-edit">
-                  <label className="radio-option">
+                <div className="flex flex-col gap-2 mt-2 w-full p-3 bg-bg-subtle rounded-lg">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input
                       type="radio"
                       name="paperType"
                       value="carbonless-2"
                       checked={paperType === 'carbonless-2'}
                       onChange={() => setPaperType('carbonless-2')}
+                      className="accent-primary"
                     />
-                    <span>2-Part Carbonless</span>
-                    <span className="option-meta">+$25</span>
+                    <span className="flex-1">2-Part Carbonless</span>
+                    <span className="text-[10px] text-text-muted">+$25</span>
                   </label>
-                  <label className="radio-option">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input
                       type="radio"
                       name="paperType"
                       value="single"
                       checked={paperType === 'single'}
                       onChange={() => setPaperType('single')}
+                      className="accent-primary"
                     />
-                    <span>Single Ply</span>
+                    <span className="flex-1">Single Ply</span>
                   </label>
-                  <button 
-                    className="done-link"
-                    onClick={() => setEditingPaper(false)}
-                  >
-                    Done
-                  </button>
+                  <button className="edit-link text-right mt-1" onClick={() => setEditingPaper(false)}>Done</button>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="order-section">
-            <div className="order-option-row">
-              <span className="order-option-label">Production</span>
+          {/* Production Time */}
+          <div className="order-field">
+            <div className="field-row">
+              <span className="field-label">Production</span>
               {!editingProduction ? (
                 <div className="order-option-value">
                   <span>{productionTime === 'standard' ? 'Standard (5-7 days)' : 'Rush (2-3 days)'}</span>
-                  <button 
-                    className="edit-link"
-                    onClick={() => setEditingProduction(true)}
-                  >
+                  <button className="edit-link" onClick={() => setEditingProduction(true)}>
                     Edit
                   </button>
                 </div>
               ) : (
-                <div className="order-option-edit">
-                  <label className="radio-option">
+                <div className="flex flex-col gap-2 mt-2 w-full p-3 bg-bg-subtle rounded-lg">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input
                       type="radio"
                       name="productionTime"
                       value="standard"
                       checked={productionTime === 'standard'}
                       onChange={() => setProductionTime('standard')}
+                      className="accent-primary"
                     />
-                    <span>Standard</span>
-                    <span className="option-meta">5-7 days</span>
+                    <span className="flex-1">Standard (5-7 days)</span>
                   </label>
-                  <label className="radio-option">
+                  <label className="flex items-center gap-2 text-sm cursor-pointer">
                     <input
                       type="radio"
                       name="productionTime"
                       value="rush"
                       checked={productionTime === 'rush'}
                       onChange={() => setProductionTime('rush')}
+                      className="accent-primary"
                     />
-                    <span>Rush</span>
-                    <span className="option-meta">+$35</span>
+                    <span className="flex-1">Rush (2-3 days)</span>
+                    <span className="text-[10px] text-text-muted">+$35</span>
                   </label>
-                  <button 
-                    className="done-link"
-                    onClick={() => setEditingProduction(false)}
-                  >
-                    Done
-                  </button>
+                  <button className="edit-link text-right mt-1" onClick={() => setEditingProduction(false)}>Done</button>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="order-divider" />
+          <div className="divider" />
 
-          <div className="price-breakdown">
+          {/* Price Breakdown */}
+          <div className="mb-4">
             <div className="price-line">
               <span>{quantity} Pads</span>
               <span>${basePrice}</span>
@@ -272,27 +262,28 @@ export function ReviewAndOrder({
           </div>
 
           <div className="price-total">
-            <span>Total</span>
+            <span className="font-semibold text-text-primary">Total</span>
             <span className="total-amount">${totalPrice}</span>
           </div>
 
+          {/* Add to Cart Button */}
           <button
             className="add-to-cart-btn"
             onClick={handleAddToCart}
             disabled={!proofApproved}
           >
-            <LockIcon className="lock-icon" />
-            Add to Cart · ${totalPrice}
+            <LockIcon className="btn-icon" />
+            <span>Add to Cart · ${totalPrice}</span>
           </button>
 
           {!proofApproved && (
-            <p className="cart-hint">
+            <p className="approval-hint">
               Please approve your proof above to continue
             </p>
           )}
 
-          <button className="download-proof-link" onClick={handleDownloadPDF}>
-            <DownloadIcon />
+          <button className="download-link" onClick={handleDownloadPDF}>
+            <DownloadIcon className="w-4 h-4" />
             Download PDF Proof
           </button>
         </div>
@@ -308,7 +299,6 @@ export function ReviewAndOrder({
         />
       )}
 
-      {/* Hidden SVG for PDF export */}
       <div ref={svgRef} className="hidden" aria-hidden="true">
         <PrescriptionPadSVG 
           practices={practices} 

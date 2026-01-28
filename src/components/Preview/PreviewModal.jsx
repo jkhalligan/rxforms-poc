@@ -7,7 +7,14 @@ export function PreviewModal({ practices, prescribers, padOptions, securityLevel
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
+    
+    // Lock body scroll
+    document.body.style.overflow = 'hidden';
+    
+    return () => {
+      window.removeEventListener('keydown', handleEsc);
+      document.body.style.overflow = '';
+    };
   }, [onClose]);
 
   const getBackgroundClass = () => {
