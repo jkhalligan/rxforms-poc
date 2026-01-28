@@ -42,13 +42,25 @@ export function CheckoutSidebar({
         <div className="checkout-pad-thumbnail">
           <div
             className={`checkout-pad-preview preview-bg--${securityLevel}`}
+            style={{
+              backgroundImage: `url('/assets/backgrounds/${securityLevel}.png')`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
+            }}
           >
-            <PrescriptionPadSVG
-              practices={practices}
-              prescribers={prescribers}
-              padOptions={padOptions}
-              securityLevel={securityLevel}
-            />
+            {securityLevel === 'maximum-security' && (
+              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                <span className="text-[120px] font-serif font-bold">Rx</span>
+              </div>
+            )}
+            <div className="relative z-10 w-full h-full p-2">
+              <PrescriptionPadSVG
+                practices={practices}
+                prescribers={prescribers}
+                padOptions={padOptions}
+                securityLevel={securityLevel}
+              />
+            </div>
           </div>
 
           <div className="checkout-pad-info">

@@ -26,9 +26,9 @@ export function CheckoutHeader({ checkoutStep }) {
     <header className="checkout-header">
       <div className="checkout-header-content">
         {/* Logo */}
-        <div className="header-logo">
-          <span className="logo-icon">Rx</span>
-          <span className="logo-text">RxForms</span>
+        <div className="flex items-center gap-2 font-bold text-gray-900">
+          <span className="bg-primary text-white px-2 py-1 rounded text-xs">Rx</span>
+          <span className="tracking-tight">RxForms</span>
         </div>
 
         {/* Checkout Progress */}
