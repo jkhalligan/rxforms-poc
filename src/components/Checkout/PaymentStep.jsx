@@ -6,12 +6,17 @@ const CardIcon = () => (
   </svg>
 );
 
-export function PaymentStep({ totalPrice, shippingAddress, onBack, onPlaceOrder }) {
+export function PaymentStep({ totalPrice, shippingAddress, prescribers, onBack, onPlaceOrder }) {
+  // Get the first prescriber's name for prefilling
+  const defaultName = prescribers && prescribers.length > 0 && prescribers[0].name
+    ? prescribers[0].name
+    : '';
+
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: '4242 4242 4242 4242',
     expiry: '12/28',
     cvc: '123',
-    nameOnCard: '',
+    nameOnCard: defaultName,
   });
   const [useDifferentBilling, setUseDifferentBilling] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);

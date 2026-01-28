@@ -31,14 +31,36 @@ export function ReviewAndOrder({
   onProceedToCheckout,
 }) {
   const [quantity, setQuantity] = useState(8);
-  const [paperType, setPaperType] = useState('carbonless-2'); 
+  const [paperType, setPaperType] = useState('carbonless-2');
   const [productionTime, setProductionTime] = useState('standard');
   const [proofApproved, setProofApproved] = useState(false);
   const [editingPaper, setEditingPaper] = useState(false);
   const [editingProduction, setEditingProduction] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showChangeConfirm, setShowChangeConfirm] = useState(false);
+  const [isGeneratingProof, setIsGeneratingProof] = useState(true);
+  const [proofProgress, setProofProgress] = useState(0);
   const svgRef = useRef();
+
+  // Simulate proof generation with progress bar
+  useEffect(() => {
+    const duration = 3000; // 3 seconds
+    const interval = 30; // Update every 30ms for smooth animation
+    const increment = (interval / duration) * 100;
+
+    const timer = setInterval(() => {
+      setProofProgress(prev => {
+        if (prev >= 100) {
+          clearInterval(timer);
+          setTimeout(() => setIsGeneratingProof(false), 100);
+          return 100;
+        }
+        return Math.min(prev + increment, 100);
+      });
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const basePrice = arizonaPricing[securityLevel].prices[quantity];
   const paperModifier = paperType === 'carbonless-2' ? 25 : 0;
@@ -84,21 +106,37 @@ export function ReviewAndOrder({
 
           <div
             className={`proof-preview preview-bg--${securityLevel} group`}
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => !isGeneratingProof && setIsModalOpen(true)}
             role="button"
             tabIndex={0}
             aria-label="Click to enlarge preview"
           >
-            <PrescriptionPadSVG
-              practices={practices}
-              prescribers={prescribers}
-              padOptions={padOptions}
-              securityLevel={securityLevel}
-            />
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/70 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-              <ZoomInIcon />
-              <span>Click to enlarge</span>
-            </div>
+            {isGeneratingProof ? (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/95">
+                <div className="text-center space-y-4 px-8">
+                  <div className="text-lg font-semibold text-gray-700">Generating Proof</div>
+                  <div className="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary transition-all duration-100 ease-linear"
+                      style={{ width: `${proofProgress}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <>
+                <PrescriptionPadSVG
+                  practices={practices}
+                  prescribers={prescribers}
+                  padOptions={padOptions}
+                  securityLevel={securityLevel}
+                />
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/70 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  <ZoomInIcon />
+                  <span>Click to enlarge</span>
+                </div>
+              </>
+            )}
           </div>
 
           <label className={`approval-checkbox ${proofApproved ? 'is-approved' : ''}`}>

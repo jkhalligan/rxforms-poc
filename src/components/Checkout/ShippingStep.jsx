@@ -58,21 +58,6 @@ export function ShippingStep({ practice, securityLevel, onContinue }) {
     <div className="checkout-step-content">
       <h2 className="checkout-step-title">Shipping Address</h2>
 
-      {showDEAWarning && (
-        <div className="shipping-warning">
-          <div className="shipping-warning-icon">
-            <AlertIcon />
-          </div>
-          <div className="shipping-warning-content">
-            <strong className="shipping-warning-title">Security Requirement</strong>
-            <p className="shipping-warning-text">
-              For controlled substance prescription pads, the shipping address must match the
-              "address of record" registered with your DEA license.
-            </p>
-          </div>
-        </div>
-      )}
-
       <div className="shipping-form">
         <p className="shipping-form-note">Pre-filled from Practice Info</p>
 
@@ -143,14 +128,24 @@ export function ShippingStep({ practice, securityLevel, onContinue }) {
         </div>
 
         {showDEAWarning && (
-          <label className="shipping-confirmation">
-            <input
-              type="checkbox"
-              checked={confirmed}
-              onChange={(e) => setConfirmed(e.target.checked)}
-            />
-            <span>I confirm this address matches my DEA registration</span>
-          </label>
+          <div className="shipping-confirmation-combined">
+            <div className="shipping-confirmation-header">
+              <AlertIcon />
+              <strong>Security Requirement</strong>
+            </div>
+            <p className="shipping-confirmation-text">
+              For controlled substance prescription pads, the shipping address must match the
+              "address of record" registered with your DEA license.
+            </p>
+            <label className="shipping-confirmation-checkbox">
+              <input
+                type="checkbox"
+                checked={confirmed}
+                onChange={(e) => setConfirmed(e.target.checked)}
+              />
+              <span>I confirm this address matches my DEA registration</span>
+            </label>
+          </div>
         )}
       </div>
 

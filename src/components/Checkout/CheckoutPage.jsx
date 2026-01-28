@@ -95,6 +95,7 @@ export function CheckoutPage({
             <PaymentStep
               totalPrice={totalPrice}
               shippingAddress={shippingAddress}
+              prescribers={prescribers}
               onBack={handlePaymentBack}
               onPlaceOrder={handlePlaceOrder}
             />

@@ -234,7 +234,7 @@ h1, h2, h3 {
 }
 
 .order-summary-card {
-  @apply bg-white border border-border rounded-lg p-6 sticky top-20 shadow-sm;
+  @apply bg-white border border-border rounded-lg p-6 sticky top-6 shadow-sm;
 }
 
 .preview-bg--maximum-security {
@@ -442,7 +442,7 @@ h1, h2, h3 {
 }
 
 .checkout-container {
-  @apply grid grid-cols-1 md:grid-cols-[1fr_380px] gap-6 max-w-[1200px] mx-auto p-6;
+  @apply grid grid-cols-1 md:grid-cols-[1fr_380px] gap-6 max-w-[1100px] mx-auto p-6;
 }
 
 .checkout-content {
@@ -501,6 +501,38 @@ h1, h2, h3 {
 
 .shipping-confirmation input[type="checkbox"] {
   @apply w-5 h-5 accent-primary cursor-pointer;
+}
+
+.shipping-confirmation-combined {
+  @apply mt-6 p-4 bg-amber-50 border-2 border-amber-400 rounded-lg space-y-3;
+}
+
+.shipping-confirmation-header {
+  @apply flex items-center gap-2 text-amber-900;
+}
+
+.shipping-confirmation-header svg {
+  @apply w-5 h-5 text-amber-600;
+}
+
+.shipping-confirmation-header strong {
+  @apply text-sm font-semibold;
+}
+
+.shipping-confirmation-text {
+  @apply text-sm text-amber-800 leading-relaxed m-0;
+}
+
+.shipping-confirmation-checkbox {
+  @apply flex items-start gap-3 p-3 bg-white border border-amber-300 rounded-md cursor-pointer hover:bg-amber-50 transition-colors;
+}
+
+.shipping-confirmation-checkbox input[type="checkbox"] {
+  @apply w-5 h-5 mt-0.5 accent-primary cursor-pointer flex-shrink-0;
+}
+
+.shipping-confirmation-checkbox span {
+  @apply text-sm font-medium text-gray-900;
 }
 
 /* Form Elements */
@@ -592,7 +624,7 @@ h1, h2, h3 {
 
 /* Checkout Sidebar */
 .checkout-sidebar {
-  @apply sticky top-24 self-start;
+  @apply sticky top-6 self-start;
 }
 
 .checkout-sidebar-card {
