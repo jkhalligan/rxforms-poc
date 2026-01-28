@@ -1,0 +1,322 @@
+import React, { useState, useRef } from 'react';
+import { PrescriptionPadSVG } from '../Preview/PrescriptionPadSVG';
+import { PreviewModal } from '../Preview/PreviewModal';
+import { arizonaPricing } from '../../config/pricing';
+import { exportPrescriptionPadPDF, getSvgElement } from '../../utils/pdfExport';
+
+const ZoomInIcon = () => (
+  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+  </svg>
+);
+
+const LockIcon = ({ className }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 20 20">
+    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+  </svg>
+);
+
+const DownloadIcon = () => (
+  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+  </svg>
+);
+
+export function ReviewAndOrder({
+  practices,
+  prescribers,
+  padOptions,
+  securityLevel,
+  onBack,
+  onAddToCart,
+}) {
+  const [quantity, setQuantity] = useState(8);
+  const [paperType, setPaperType] = useState('carbonless-2'); 
+  const [productionTime, setProductionTime] = useState('standard');
+  const [proofApproved, setProofApproved] = useState(false);
+  const [editingPaper, setEditingPaper] = useState(false);
+  const [editingProduction, setEditingProduction] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const svgRef = useRef();
+
+  const basePrice = arizonaPricing[securityLevel].prices[quantity];
+  const paperModifier = paperType === 'carbonless-2' ? 25 : 0;
+  const productionModifier = productionTime === 'rush' ? 35 : 0;
+  const totalPrice = basePrice + paperModifier + productionModifier;
+
+  const quantities = [8, 16, 24, 40, 80];
+
+  const handleAddToCart = () => {
+    if (!proofApproved) return;
+    onAddToCart({
+      practices,
+      prescribers,
+      padOptions,
+      securityLevel,
+      quantity,
+      paperType,
+      productionTime,
+      totalPrice,
+    });
+  };
+
+  const handleDownloadPDF = async () => {
+    const svgElement = getSvgElement(svgRef);
+    if (svgElement) {
+      await exportPrescriptionPadPDF(svgElement, `RxPad-Proof-${securityLevel}.pdf`);
+    }
+  };
+
+  return (
+    <div className="review-order-container">
+      {/* Left Column - Proof */}
+      <div className="review-proof-column">
+        <div className="proof-section">
+          <h2 className="section-title">Review Your Proof</h2>
+          <p className="section-subtitle">
+            Please verify all details are correct before adding to cart.
+          </p>
+
+          <div
+            className={`proof-preview preview-bg--${securityLevel}`}
+            onClick={() => setIsModalOpen(true)}
+            role="button"
+            tabIndex={0}
+            aria-label="Click to enlarge preview"
+          >
+            <PrescriptionPadSVG
+              practices={practices}
+              prescribers={prescribers}
+              padOptions={padOptions}
+              securityLevel={securityLevel}
+            />
+            <div className="proof-zoom-hint">
+              <ZoomInIcon />
+              <span>Click to enlarge</span>
+            </div>
+          </div>
+
+          <label className="approval-checkbox">
+            <input
+              type="checkbox"
+              checked={proofApproved}
+              onChange={(e) => setProofApproved(e.target.checked)}
+            />
+            <div className="approval-text">
+              <span className="approval-label">
+                I confirm this proof is accurate and ready for printing
+              </span>
+              <span className="approval-subtext">
+                Changes cannot be made after the order is placed
+              </span>
+            </div>
+          </label>
+
+          <button className="edit-design-link" onClick={onBack}>
+            ← Edit Design
+          </button>
+        </div>
+      </div>
+
+      {/* Right Column - Order Summary */}
+      <div className="order-summary-column">
+        <div className="order-summary-card">
+          <h3 className="order-summary-title">Order Summary</h3>
+
+          <div className="order-product-info">
+            <div className="product-badge">
+              {securityLevel === 'maximum-security' && 'Maximum Security'}
+              {securityLevel === 'minimum-security' && 'Minimum Security'}
+              {securityLevel === 'no-security' && 'Standard'}
+            </div>
+            <p className="product-details">
+              Arizona · {prescribers.filter(p => p.name).length} Prescriber
+              {prescribers.filter(p => p.name).length !== 1 ? 's' : ''}
+              {padOptions.startingNumber !== '0001' && ` · Starting #${padOptions.startingNumber}`}
+            </p>
+          </div>
+
+          <div className="order-divider" />
+
+          <div className="order-section">
+            <label className="order-section-label">Quantity (Pads)</label>
+            <div className="quantity-buttons">
+              {quantities.map((qty) => (
+                <button
+                  key={qty}
+                  className={`quantity-btn ${quantity === qty ? 'quantity-btn--selected' : ''}`}
+                  onClick={() => setQuantity(qty)}
+                >
+                  {qty}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="order-divider" />
+
+          <div className="order-section">
+            <div className="order-option-row">
+              <span className="order-option-label">Paper</span>
+              {!editingPaper ? (
+                <div className="order-option-value">
+                  <span>{paperType === 'carbonless-2' ? '2-Part Carbonless' : 'Single Ply'}</span>
+                  <button 
+                    className="edit-link"
+                    onClick={() => setEditingPaper(true)}
+                  >
+                    Edit
+                  </button>
+                </div>
+              ) : (
+                <div className="order-option-edit">
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="paperType"
+                      value="carbonless-2"
+                      checked={paperType === 'carbonless-2'}
+                      onChange={() => setPaperType('carbonless-2')}
+                    />
+                    <span>2-Part Carbonless</span>
+                    <span className="option-meta">+$25</span>
+                  </label>
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="paperType"
+                      value="single"
+                      checked={paperType === 'single'}
+                      onChange={() => setPaperType('single')}
+                    />
+                    <span>Single Ply</span>
+                  </label>
+                  <button 
+                    className="done-link"
+                    onClick={() => setEditingPaper(false)}
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="order-section">
+            <div className="order-option-row">
+              <span className="order-option-label">Production</span>
+              {!editingProduction ? (
+                <div className="order-option-value">
+                  <span>{productionTime === 'standard' ? 'Standard (5-7 days)' : 'Rush (2-3 days)'}</span>
+                  <button 
+                    className="edit-link"
+                    onClick={() => setEditingProduction(true)}
+                  >
+                    Edit
+                  </button>
+                </div>
+              ) : (
+                <div className="order-option-edit">
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="productionTime"
+                      value="standard"
+                      checked={productionTime === 'standard'}
+                      onChange={() => setProductionTime('standard')}
+                    />
+                    <span>Standard</span>
+                    <span className="option-meta">5-7 days</span>
+                  </label>
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="productionTime"
+                      value="rush"
+                      checked={productionTime === 'rush'}
+                      onChange={() => setProductionTime('rush')}
+                    />
+                    <span>Rush</span>
+                    <span className="option-meta">+$35</span>
+                  </label>
+                  <button 
+                    className="done-link"
+                    onClick={() => setEditingProduction(false)}
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="order-divider" />
+
+          <div className="price-breakdown">
+            <div className="price-line">
+              <span>{quantity} Pads</span>
+              <span>${basePrice}</span>
+            </div>
+            {paperModifier > 0 && (
+              <div className="price-line">
+                <span>2-Part Carbonless</span>
+                <span>+${paperModifier}</span>
+              </div>
+            )}
+            {productionModifier > 0 && (
+              <div className="price-line">
+                <span>Rush Production</span>
+                <span>+${productionModifier}</span>
+              </div>
+            )}
+          </div>
+
+          <div className="price-total">
+            <span>Total</span>
+            <span className="total-amount">${totalPrice}</span>
+          </div>
+
+          <button
+            className="add-to-cart-btn"
+            onClick={handleAddToCart}
+            disabled={!proofApproved}
+          >
+            <LockIcon className="lock-icon" />
+            Add to Cart · ${totalPrice}
+          </button>
+
+          {!proofApproved && (
+            <p className="cart-hint">
+              Please approve your proof above to continue
+            </p>
+          )}
+
+          <button className="download-proof-link" onClick={handleDownloadPDF}>
+            <DownloadIcon />
+            Download PDF Proof
+          </button>
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <PreviewModal
+          practices={practices}
+          prescribers={prescribers}
+          padOptions={padOptions}
+          securityLevel={securityLevel}
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
+
+      {/* Hidden SVG for PDF export */}
+      <div ref={svgRef} className="hidden" aria-hidden="true">
+        <PrescriptionPadSVG 
+          practices={practices} 
+          prescribers={prescribers} 
+          padOptions={padOptions} 
+          securityLevel={securityLevel} 
+        />
+      </div>
+    </div>
+  );
+}

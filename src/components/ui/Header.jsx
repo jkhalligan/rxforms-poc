@@ -10,8 +10,7 @@ export function Header({ currentStep, completedSteps, onStepClick }) {
   const steps = [
     { id: 'practice', label: 'Practice' },
     { id: 'prescribers', label: 'Prescribers' },
-    { id: 'review', label: 'Review' },
-    { id: 'order', label: 'Order' },
+    { id: 'review', label: 'Review & Order' },
   ];
 
   return (

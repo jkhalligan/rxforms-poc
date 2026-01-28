@@ -3,12 +3,10 @@ import { arizonaConfig } from '../config/arizona';
 
 export function useFormState() {
   const [currentStep, setCurrentStep] = useState('practice');
-  const [practices, setPractices] = useState([{}]);
-  const [prescribers, setPrescribers] = useState([{}]);
+  const [practices, setPractices] = useState([{ name: '', address: '', city: '', state: 'AZ', zip: '', phone: '', fax: '' }]);
+  const [prescribers, setPrescribers] = useState([{ name: '', credentials: '', specialty: '', licenseNumber: '', hideLicense: false, npiNumber: '', deaNumber: '' }]);
   const [securityLevel, setSecurityLevel] = useState(arizonaConfig.defaultSecurityLevel);
   const [padOptions, setPadOptions] = useState({ startingNumber: '0001' });
-  const [orderOptions, setOrderOptions] = useState({ quantity: 8, paperType: 'single', productionTime: 'standard' });
-  const [proofApproved, setProofApproved] = useState(false);
 
   const updatePractice = (index, data) => {
     const newPractices = [...practices];
@@ -18,7 +16,7 @@ export function useFormState() {
 
   const addPractice = () => {
     if (practices.length < arizonaConfig.maxLocations) {
-      setPractices([...practices, {}]);
+      setPractices([...practices, { name: '', address: '', city: '', state: 'AZ', zip: '', phone: '', fax: '' }]);
     }
   };
 
@@ -36,7 +34,7 @@ export function useFormState() {
 
   const addPrescriber = () => {
     if (prescribers.length < arizonaConfig.maxPrescribers) {
-      setPrescribers([...prescribers, {}]);
+      setPrescribers([...prescribers, { name: '', credentials: '', specialty: '', licenseNumber: '', hideLicense: false, npiNumber: '', deaNumber: '' }]);
     }
   };
 
@@ -63,9 +61,5 @@ export function useFormState() {
     setSecurityLevel,
     padOptions,
     setPadOptions,
-    orderOptions,
-    setOrderOptions,
-    proofApproved,
-    setProofApproved,
   };
 }

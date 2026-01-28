@@ -5,8 +5,7 @@ import { FooterNav } from './components/ui/FooterNav';
 import { StepLayout } from './components/ui/StepLayout';
 import { PracticeForm } from './components/Builder/PracticeForm';
 import { PrescriberForm } from './components/Builder/PrescriberForm';
-import { ProofApproval } from './components/Review/ProofApproval';
-import { OrderOptions } from './components/Order/OrderOptions';
+import { ReviewAndOrder } from './components/ReviewAndOrder/ReviewAndOrder';
 import { PreviewPanel } from './components/Preview/PreviewPanel';
 import { validatePractice, validatePrescriber } from './utils/validation';
 
@@ -26,10 +25,6 @@ function App() {
     setSecurityLevel,
     padOptions,
     setPadOptions,
-    orderOptions,
-    setOrderOptions,
-    proofApproved,
-    setProofApproved,
   } = useFormState();
 
   const [completedSteps, setCompletedSteps] = useState(['practice']);
@@ -43,29 +38,28 @@ function App() {
     if (newCompleted.includes('prescribers') && allPrescribersValid) {
       newCompleted.push('review');
     }
-    if (proofApproved) {
-      newCompleted.push('order');
-    }
     setCompletedSteps(newCompleted);
-  }, [practices, prescribers, proofApproved]);
+  }, [practices, prescribers]);
 
   const handleContinue = () => {
     if (currentStep === 'practice') setCurrentStep('prescribers');
     else if (currentStep === 'prescribers') setCurrentStep('review');
-    else if (currentStep === 'review') setCurrentStep('order');
   };
 
   const handleBack = () => {
     if (currentStep === 'prescribers') setCurrentStep('practice');
     else if (currentStep === 'review') setCurrentStep('prescribers');
-    else if (currentStep === 'order') setCurrentStep('review');
   };
 
   const isContinueDisabled = () => {
     if (currentStep === 'practice') return !validatePractice(practices[0]).valid;
     if (currentStep === 'prescribers') return !prescribers.every(p => validatePrescriber(p).valid);
-    if (currentStep === 'review') return !proofApproved;
     return false;
+  };
+
+  const handleAddToCart = (orderData) => {
+    console.log('Adding to cart:', orderData);
+    alert(`Added to cart! Total: $${orderData.totalPrice}`);
   };
 
   const renderContent = () => {
@@ -92,27 +86,13 @@ function App() {
         );
       case 'review':
         return (
-          <ProofApproval
+          <ReviewAndOrder
             practices={practices}
             prescribers={prescribers}
             padOptions={padOptions}
             securityLevel={securityLevel}
-            proofApproved={proofApproved}
-            setProofApproved={setProofApproved}
-            onEdit={() => setCurrentStep('prescribers')}
-          />
-        );
-      case 'order':
-        return (
-          <OrderOptions
-            practices={practices}
-            prescribers={prescribers}
-            padOptions={padOptions}
-            securityLevel={securityLevel}
-            orderOptions={orderOptions}
-            setOrderOptions={setOrderOptions}
-            onBack={() => setCurrentStep('review')}
-            onComplete={() => alert('Order submitted! Check your downloads for the PDF.')}
+            onBack={() => setCurrentStep('prescribers')}
+            onAddToCart={handleAddToCart}
           />
         );
       default:
@@ -140,16 +120,21 @@ function App() {
       />
 
       <main className="flex-1">
-        <StepLayout preview={renderPreview()}>
-          {renderContent()}
-        </StepLayout>
+        {currentStep === 'review' ? (
+          renderContent()
+        ) : (
+          <StepLayout preview={renderPreview()}>
+            {renderContent()}
+          </StepLayout>
+        )}
       </main>
 
       <FooterNav 
+        currentStep={currentStep}
         onBack={currentStep !== 'practice' ? handleBack : null}
         onContinue={handleContinue}
         continueDisabled={isContinueDisabled()}
-        continueLabel={currentStep === 'order' ? 'SUBMIT ORDER' : 'CONTINUE'}
+        continueLabel="CONTINUE"
       />
     </div>
   );

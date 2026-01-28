@@ -29,6 +29,7 @@ export function PreviewPanel({
   const [pricingExpanded, setPricingExpanded] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentPrice = arizonaPricing[securityLevel].prices[8]; 
+  const securityLevelName = arizonaPricing[securityLevel].name;
 
   const getBackgroundClass = () => {
     switch (securityLevel) {
@@ -92,22 +93,13 @@ export function PreviewPanel({
           </p>
         </div>
 
-        <div className="border-t border-border">
-          <button 
-            className="w-full flex items-center gap-2 p-4 text-left hover:bg-bg-subtle transition-colors"
-            onClick={() => setPricingExpanded(!pricingExpanded)}
-          >
-            <span className="text-lg font-bold text-gray-900">Starting at ${currentPrice}</span>
-            <span className="text-sm text-gray-500">for 8 pads</span>
-            <span className={`ml-auto transform transition-transform ${pricingExpanded ? 'rotate-180' : ''}`}>▾</span>
-          </button>
-
-          {pricingExpanded && (
-            <div className="p-4 pt-0 space-y-4">
-              <PricingTable securityLevel={securityLevel} setSecurityLevel={setSecurityLevel} />
-              <HelpExpander />
-            </div>
-          )}
+        <div className="border-t border-border py-4 px-6 text-center">
+          <div className="text-sm text-gray-500">
+            Starting at <strong className="text-lg text-gray-900">${currentPrice}</strong>
+          </div>
+          <div className="text-[11px] text-gray-400 mt-0.5">
+            for 8 pads · {securityLevelName}
+          </div>
         </div>
       </div>
 

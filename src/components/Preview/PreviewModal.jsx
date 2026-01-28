@@ -35,7 +35,8 @@ export function PreviewModal({ practices, prescribers, padOptions, securityLevel
           className={`modal-preview shadow-lg border border-gray-100 relative ${getBackgroundClass()}`}
           style={{
             backgroundImage: securityLevel !== 'no-security' ? `url('/assets/backgrounds/${securityLevel}.png')` : 'none',
-            backgroundSize: 'cover',
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center'
           }}
         >
