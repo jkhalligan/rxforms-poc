@@ -184,11 +184,11 @@ h1, h2, h3 {
 }
 
 .accordion--expanded {
-  @apply border-l-[3px] border-l-primary shadow-md;
+  @apply border-2 border-primary shadow-md;
 }
 
 .accordion--error {
-  @apply border-l-[3px] border-l-error;
+  @apply border-2 border-error;
 }
 
 /* Static Cards */
@@ -196,39 +196,24 @@ h1, h2, h3 {
   @apply bg-white border border-border rounded-lg p-6 shadow-sm;
 }
 
-/* Pulsing border animation */
-@keyframes pulse-attention {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 111, 255, 0.4);
-  }
-  70% {
-    box-shadow: 0 0 0 8px rgba(0, 111, 255, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 111, 255, 0);
-  }
-}
-
 .approval-checkbox {
-  @apply flex items-start gap-3 p-4 bg-bg-subtle border-2 border-border rounded-lg cursor-pointer mt-6 transition-all;
-}
-
-.approval-checkbox:not(.is-approved) {
-  @apply border-primary;
-  animation: pulse-attention 2s ease-out infinite;
+  @apply flex items-start gap-3 p-4 rounded-lg cursor-pointer mt-6 transition-all;
+  background: #FAFAFA;
+  border: 2px solid #006FFF;
 }
 
 .approval-checkbox:not(.is-approved):hover {
   @apply bg-primary-light;
 }
 
+/* Checked/approved state - solid green border */
 .approval-checkbox.is-approved {
   @apply border-success bg-green-50;
-  animation: none;
+  border: 2px solid #059669;
 }
 
 .approval-checkbox input {
-  @apply w-5 h-5 mt-0.5 accent-primary;
+  @apply w-5 h-5 mt-0.5 accent-primary flex-shrink-0;
 }
 
 /* Review & Order Step Styles */
@@ -275,4 +260,133 @@ h1, h2, h3 {
 
 .security-option--selected {
   @apply bg-primary-light text-primary font-semibold ring-1 ring-primary shadow-sm;
+}
+
+/* Review & Order - Order Summary Styles */
+.order-field {
+  @apply mb-4;
+}
+
+.field-label {
+  @apply block text-sm font-semibold text-text-secondary mb-2;
+}
+
+.field-row {
+  @apply flex items-start justify-between gap-2;
+}
+
+.order-option-value {
+  @apply flex items-center gap-2 text-sm text-text-primary font-medium;
+}
+
+.edit-link {
+  @apply px-0 py-0 bg-transparent border-none text-primary text-xs font-bold cursor-pointer hover:underline;
+}
+
+.quantity-buttons {
+  @apply flex gap-2;
+}
+
+.quantity-btn {
+  @apply flex-1 min-w-[48px] py-3 px-2 bg-bg-subtle border border-border rounded-md text-sm font-medium cursor-pointer transition-all hover:bg-border-light;
+}
+
+.quantity-btn--selected {
+  @apply bg-primary border-primary text-white hover:bg-primary-hover;
+}
+
+.divider {
+  @apply border-t border-border my-4;
+}
+
+.price-line {
+  @apply flex justify-between items-center py-1 text-sm text-text-secondary;
+}
+
+.price-total {
+  @apply flex justify-between items-center pt-4 border-t border-border font-semibold;
+}
+
+.total-amount {
+  @apply text-2xl font-bold text-text-primary;
+}
+
+.add-to-cart-btn {
+  @apply w-full flex items-center justify-center gap-2 py-4 mt-4 bg-primary text-white border-none rounded-lg text-base font-semibold cursor-pointer transition-colors hover:bg-primary-hover disabled:bg-gray-300 disabled:cursor-not-allowed;
+}
+
+.btn-icon {
+  @apply w-4 h-4;
+}
+
+.approval-hint {
+  @apply text-xs text-center text-text-muted mt-2;
+}
+
+.approval-text {
+  @apply flex flex-col gap-1;
+}
+
+.approval-label {
+  @apply font-medium text-text-primary;
+}
+
+.approval-subtext {
+  @apply text-sm text-text-muted;
+}
+
+.download-link {
+  @apply w-full flex items-center justify-center gap-2 py-3 mt-4 bg-transparent border border-border text-text-secondary rounded-lg text-sm font-medium cursor-pointer transition-colors hover:bg-bg-subtle;
+}
+
+.security-badge {
+  @apply inline-flex items-center px-3 py-1 bg-primary-light text-primary text-xs font-semibold rounded-full;
+}
+
+.product-meta {
+  @apply text-xs text-text-muted;
+}
+
+.edit-design-link {
+  @apply mt-6 px-4 py-2 bg-transparent border border-border text-text-secondary rounded-lg text-sm font-medium cursor-pointer transition-colors hover:bg-bg-subtle inline-flex items-center gap-2;
+}
+
+.proof-title {
+  @apply mb-0;
+}
+
+.proof-subtitle {
+  @apply mt-0;
+}
+
+.order-summary-title {
+  @apply text-lg font-bold text-text-primary mb-4;
+}
+
+.change-link {
+  @apply px-0 py-0 bg-transparent border-none text-primary text-[10px] font-bold cursor-pointer hover:underline;
+}
+
+.change-confirm {
+  @apply mt-3 p-3 bg-amber-50 border border-amber-400 rounded-md;
+}
+
+.change-confirm-text {
+  @apply text-[0.8125rem] text-amber-900 m-0 mb-2 leading-snug;
+}
+
+.change-confirm-actions {
+  @apply flex gap-2;
+}
+
+.confirm-btn {
+  @apply py-1.5 px-3 text-xs font-medium rounded cursor-pointer transition-colors;
+}
+
+.confirm-btn--secondary {
+  @apply bg-white border border-gray-300 text-gray-700 hover:bg-gray-50;
+}
+
+.confirm-btn--primary {
+  @apply bg-primary border border-primary text-white hover:bg-primary-hover;
 }

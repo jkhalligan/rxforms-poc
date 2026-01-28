@@ -31,9 +31,9 @@ export function PreviewPanel({
 
   const getBackgroundClass = () => {
     switch (securityLevel) {
-      case 'maximum-security': return 'bg-[#f5e6d3] bg-diagonal-pattern-rich';
-      case 'minimum-security': return 'bg-[#faf3e8] bg-diagonal-pattern-light';
-      default: return 'bg-white';
+      case 'maximum-security': return 'bg-[#f5e6d3]';
+      case 'minimum-security': return 'bg-[#faf3e8]';
+      default: return 'bg-[#fafafa]';
     }
   };
 
@@ -50,10 +50,10 @@ export function PreviewPanel({
           </button>
         </div>
 
-        <div 
+        <div
           className={`relative aspect-[1.294] m-4 rounded-sm overflow-hidden shadow-sm border border-gray-100 cursor-pointer group ${getBackgroundClass()}`}
           style={{
-            backgroundImage: securityLevel !== 'no-security' ? `url('/assets/backgrounds/${securityLevel}.png')` : 'none',
+            backgroundImage: `url('/assets/backgrounds/${securityLevel}.png')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}

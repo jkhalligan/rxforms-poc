@@ -37,6 +37,7 @@ export function ReviewAndOrder({
   const [editingPaper, setEditingPaper] = useState(false);
   const [editingProduction, setEditingProduction] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showChangeConfirm, setShowChangeConfirm] = useState(false);
   const svgRef = useRef();
 
   const basePrice = arizonaPricing[securityLevel].prices[quantity];
@@ -59,6 +60,7 @@ export function ReviewAndOrder({
       totalPrice,
     });
   };
+
 
   const handleDownloadPDF = async () => {
     const svgElement = getSvgElement(svgRef);
@@ -132,16 +134,43 @@ export function ReviewAndOrder({
                 {securityLevel === 'minimum-security' && 'Minimum Security'}
                 {securityLevel === 'no-security' && 'Standard'}
               </span>
-              <button 
-                className="text-[10px] font-bold text-primary hover:underline"
-                onClick={onBack}
-              >
-                CHANGE
-              </button>
+              {!showChangeConfirm && (
+                <button
+                  className="change-link"
+                  onClick={() => setShowChangeConfirm(true)}
+                >
+                  CHANGE
+                </button>
+              )}
             </div>
             <p className="product-meta">
               Arizona · {prescriberCount} Prescriber{prescriberCount !== 1 ? 's' : ''}
             </p>
+
+            {showChangeConfirm && (
+              <div className="change-confirm">
+                <p className="change-confirm-text">
+                  This will take you back one step, where you can change your pad type. No changes will be lost.
+                </p>
+                <div className="change-confirm-actions">
+                  <button
+                    className="confirm-btn confirm-btn--secondary"
+                    onClick={() => setShowChangeConfirm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="confirm-btn confirm-btn--primary"
+                    onClick={() => {
+                      setShowChangeConfirm(false);
+                      onBack();
+                    }}
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="divider" />

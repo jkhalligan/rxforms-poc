@@ -112,11 +112,11 @@ function App() {
   );
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <Header 
-        currentStep={currentStep} 
-        completedSteps={completedSteps} 
-        onStepClick={setCurrentStep} 
+    <div className="min-h-screen bg-transparent flex flex-col">
+      <Header
+        currentStep={currentStep}
+        completedSteps={completedSteps}
+        onStepClick={setCurrentStep}
       />
 
       <main className="flex-1">
