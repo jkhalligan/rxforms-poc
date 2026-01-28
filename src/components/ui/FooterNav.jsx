@@ -1,9 +1,18 @@
 import React from 'react';
 
-export function FooterNav({ currentStep, onBack, onContinue, backLabel, continueLabel, continueDisabled }) {
+export function FooterNav({ currentStep, onBack, onContinue, backLabel, continueLabel, continueDisabled, securityLevel }) {
   if (currentStep === 'review') {
     return null;
   }
+
+  const getSecurityLabel = () => {
+    switch (securityLevel) {
+      case 'maximum-security': return 'Maximum Security selected';
+      case 'minimum-security': return 'Minimum Security selected';
+      case 'no-security': return 'Standard selected';
+      default: return '';
+    }
+  };
 
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-border py-4 px-6 z-[100] shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
@@ -15,13 +24,21 @@ export function FooterNav({ currentStep, onBack, onContinue, backLabel, continue
         ) : (
           <div /> 
         )}
-        <button 
-          onClick={onContinue} 
-          disabled={continueDisabled}
-          className="px-8 py-3 bg-primary text-white rounded-lg font-bold text-sm shadow-md hover:bg-primary-hover disabled:opacity-30 disabled:cursor-not-allowed transition-all"
-        >
-          {continueLabel || 'CONTINUE'} →
-        </button>
+        
+        <div className="flex items-center gap-6">
+          {securityLevel && (
+            <span className="hidden md:block text-[11px] font-bold text-gray-400 uppercase tracking-widest">
+              {getSecurityLabel()}
+            </span>
+          )}
+          <button 
+            onClick={onContinue} 
+            disabled={continueDisabled}
+            className="px-8 py-3 bg-primary text-white rounded-lg font-bold text-sm shadow-md hover:bg-primary-hover disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+          >
+            {continueLabel || 'CONTINUE'} →
+          </button>
+        </div>
       </div>
     </footer>
   );

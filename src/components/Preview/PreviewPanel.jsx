@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { PrescriptionPadSVG } from './PrescriptionPadSVG';
 import { SecurityToggle } from './SecurityToggle';
-import { PricingTable } from './PricingTable';
 import { HelpExpander } from '../ui/HelpExpander';
 import { PreviewModal } from './PreviewModal';
 import { arizonaPricing } from '../../config/pricing';
@@ -24,9 +23,8 @@ export function PreviewPanel({
   padOptions, 
   securityLevel, 
   setSecurityLevel,
-  isReviewStep = false 
 }) {
-  const [pricingExpanded, setPricingExpanded] = useState(false);
+  const [showSecurityHelp, setShowSecurityHelp] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const currentPrice = arizonaPricing[securityLevel].prices[8]; 
   const securityLevelName = arizonaPricing[securityLevel].name;
@@ -43,7 +41,7 @@ export function PreviewPanel({
     <>
       <div className="bg-white rounded-lg border border-border overflow-hidden shadow-sm transition-all">
         <div className="flex items-center justify-between p-3.5 border-b border-border">
-          <span className="text-sm font-bold text-gray-900">Your Prescription Pad</span>
+          <span className="text-sm font-bold text-gray-900 leading-tight">Your Arizona Prescription Pad</span>
           <button 
             onClick={() => setIsModalOpen(true)}
             className="flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-bold text-gray-500 bg-gray-50 border border-gray-200 rounded-md hover:bg-white hover:border-primary hover:text-primary transition-all"
@@ -86,14 +84,40 @@ export function PreviewPanel({
         <div className="border-t border-border p-4">
           <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-2">Security Level</label>
           <SecurityToggle securityLevel={securityLevel} setSecurityLevel={setSecurityLevel} />
+          
           <p className="mt-2 text-[11px] text-gray-500 italic">
             {securityLevel === 'maximum-security' && 'Required for controlled substances (Schedule II-V)'}
             {securityLevel === 'minimum-security' && 'Meets federal Medicaid tamper-resistant requirements'}
             {securityLevel === 'no-security' && 'For non-controlled, non-Medicaid prescriptions'}
           </p>
+
+          <button 
+            className="w-full mt-3 py-1.5 text-[11px] font-bold text-primary hover:underline transition-all"
+            onClick={() => setShowSecurityHelp(!showSecurityHelp)}
+          >
+            {showSecurityHelp ? '− HIDE GUIDANCE' : '+ HELP ME DECIDE'}
+          </button>
+
+          {showSecurityHelp && (
+            <div className="mt-3 p-3 bg-gray-50 border border-gray-100 rounded-md text-[11px] space-y-3 animate-in slide-in-from-top-2 duration-200">
+              <div>
+                <strong className="block text-gray-900 mb-0.5">Maximum Security</strong>
+                <span className="text-gray-600 leading-normal">Required by law for controlled substances. Includes microprint, sequential numbering, and tamper-evident features.</span>
+              </div>
+              <div>
+                <strong className="block text-gray-900 mb-0.5">Minimum Security</strong>
+                <span className="text-gray-600 leading-normal">Meets federal requirements for Medicaid prescriptions. Good for general practice without controlled substances.</span>
+              </div>
+              <div>
+                <strong className="block text-gray-900 mb-0.5">Standard</strong>
+                <span className="text-gray-600 leading-normal">For private-pay patients and non-controlled prescriptions. Most economical option.</span>
+              </div>
+              <p className="pt-2 border-t border-gray-200 italic text-gray-400 text-[10px]">Not sure? Maximum Security works for all prescription types.</p>
+            </div>
+          )}
         </div>
 
-        <div className="border-t border-border py-4 px-6 text-center">
+        <div className="border-t border-border py-4 px-6 text-center bg-gray-50/50">
           <div className="text-sm text-gray-500">
             Starting at <strong className="text-lg text-gray-900">${currentPrice}</strong>
           </div>

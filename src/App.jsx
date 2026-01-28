@@ -135,6 +135,7 @@ function App() {
         onContinue={handleContinue}
         continueDisabled={isContinueDisabled()}
         continueLabel="CONTINUE"
+        securityLevel={securityLevel}
       />
     </div>
   );

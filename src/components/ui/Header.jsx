@@ -19,7 +19,7 @@ export function Header({ currentStep, completedSteps, onStepClick }) {
         {/* Logo */}
         <div className="flex items-center gap-2 font-bold text-gray-900">
           <span className="bg-primary text-white px-2 py-1 rounded text-xs">Rx</span>
-          <span className="tracking-tight">RxForms <span className="text-gray-300 font-normal">POC</span></span>
+          <span className="tracking-tight">RxForms</span>
         </div>
 
         {/* Progress breadcrumb */}
@@ -53,10 +53,8 @@ export function Header({ currentStep, completedSteps, onStepClick }) {
           })}
         </nav>
 
-        {/* Product context */}
-        <div className="hidden md:block text-gray-400 font-bold text-[11px] uppercase tracking-widest">
-          Arizona Rx Pads
-        </div>
+        {/* Empty placeholder to keep layout centered */}
+        <div className="hidden md:block w-32" />
       </div>
     </header>
   );

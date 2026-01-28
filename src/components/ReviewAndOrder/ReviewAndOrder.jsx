@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PrescriptionPadSVG } from '../Preview/PrescriptionPadSVG';
 import { PreviewModal } from '../Preview/PreviewModal';
 import { arizonaPricing } from '../../config/pricing';
@@ -67,18 +67,20 @@ export function ReviewAndOrder({
     }
   };
 
+  const prescriberCount = prescribers.filter(p => p.name).length;
+
   return (
     <div className="review-order-layout">
       {/* Left Column - Proof */}
       <div className="review-proof-section">
         <div className="proof-card">
-          <h2 className="proof-title">Review Your Proof</h2>
-          <p className="proof-subtitle">
+          <h2 className="proof-title text-2xl font-bold text-gray-900">Review Your Proof</h2>
+          <p className="proof-subtitle text-gray-500 mt-1 mb-6">
             Please verify all details are correct before adding to cart.
           </p>
 
           <div
-            className={`proof-preview preview-bg--${securityLevel}`}
+            className={`proof-preview preview-bg--${securityLevel} group`}
             onClick={() => setIsModalOpen(true)}
             role="button"
             tabIndex={0}
@@ -96,7 +98,7 @@ export function ReviewAndOrder({
             </div>
           </div>
 
-          <label className="approval-checkbox">
+          <label className={`approval-checkbox ${proofApproved ? 'is-approved' : ''}`}>
             <input
               type="checkbox"
               checked={proofApproved}
@@ -124,14 +126,21 @@ export function ReviewAndOrder({
           <h3 className="order-summary-title">Order Summary</h3>
 
           <div className="mb-4">
-            <span className="security-badge">
-              {securityLevel === 'maximum-security' && 'Maximum Security'}
-              {securityLevel === 'minimum-security' && 'Minimum Security'}
-              {securityLevel === 'no-security' && 'Standard'}
-            </span>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="security-badge">
+                {securityLevel === 'maximum-security' && 'Maximum Security'}
+                {securityLevel === 'minimum-security' && 'Minimum Security'}
+                {securityLevel === 'no-security' && 'Standard'}
+              </span>
+              <button 
+                className="text-[10px] font-bold text-primary hover:underline"
+                onClick={onBack}
+              >
+                CHANGE
+              </button>
+            </div>
             <p className="product-meta">
-              Arizona · {prescribers.filter(p => p.name).length} Prescriber
-              {prescribers.filter(p => p.name).length !== 1 ? 's' : ''}
+              Arizona · {prescriberCount} Prescriber{prescriberCount !== 1 ? 's' : ''}
             </p>
           </div>
 

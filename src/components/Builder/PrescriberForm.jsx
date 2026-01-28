@@ -84,9 +84,7 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
           return (
             <div 
               key={index} 
-              className={`bg-white border rounded-lg overflow-hidden transition-all ${
-                isExpanded ? 'border-primary shadow-sm' : 'border-border'
-              }`}
+              className={`accordion ${isExpanded ? 'accordion--expanded' : ''} ${status === 'error' ? 'accordion--error' : ''}`}
             >
               <button
                 className={`w-full flex items-center gap-3 p-4 text-left transition-colors ${
@@ -106,7 +104,7 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
               </button>
               
               {isExpanded && (
-                <div className="p-4 bg-white border-t border-border-light space-y-4">
+                <div className="p-5 bg-white border-t border-border-light space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {prescriberFields.map((field) => (
                       field.type === 'checkbox' ? (
@@ -148,7 +146,7 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
         <button
           onClick={addPrescriber}
           disabled={!canAddPrescriber()}
-          className={`w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg font-bold transition-all text-sm ${
+          className={`w-full flex items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg font-bold transition-all text-xs tracking-widest ${
             canAddPrescriber() 
               ? 'border-gray-200 text-primary hover:border-primary hover:bg-primary-light' 
               : 'border-gray-200 text-gray-400 cursor-not-allowed'
@@ -165,7 +163,9 @@ export function PrescriberForm({ prescribers, updatePrescriber, addPrescriber, r
         )}
       </div>
 
-      <PadOptions padOptions={padOptions} setPadOptions={setPadOptions} />
+      <div className="static-card">
+        <PadOptions padOptions={padOptions} setPadOptions={setPadOptions} />
+      </div>
     </div>
   );
 }
